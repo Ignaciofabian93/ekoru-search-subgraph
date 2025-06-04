@@ -33,12 +33,12 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.send("Product's subgraph is running");
+  res.send("Search subgraph is running");
 });
 
-const PORT = process.env.PORT || 4002;
+const PORT = process.env.PORT || 4003;
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
-  console.log(`Product's subgraph is running on port ${PORT}`);
+  console.log(`Search subgraph is running on port ${PORT}`);
 });

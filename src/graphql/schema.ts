@@ -1,91 +1,51 @@
 import gql from "graphql-tag";
 
 export const typeDefs = gql`
-  extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@shareable"])
+  extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@shareable", "@external"])
+
+  extend type Product @key(fields: "id") {
+    id: ID! @external
+  }
 
   extend type User @key(fields: "id") {
-    id: ID! @federation__external
+    id: ID! @external
   }
 
-  type ProductCategory {
-    id: ID!
-    productCategory: String!
-    products: [Product]
-    departmentCategoryId: Int!
-  }
-
-  type DepartmentCategory {
-    id: ID!
-    departmentCategory: String!
-    departmentId: Int!
-  }
-
-  type Department {
-    id: ID!
-    department: String!
-  }
-
-  type Product {
-    id: ID!
-    name: String!
-    description: String!
-    price: Int!
-    images: [String]
-    hasOffer: Boolean!
-    offerPrice: Int
-    stock: Int!
-    size: String!
-    productCategoryId: Int!
-    productCategory: ProductCategory
-    userId: String!
-    user: User
-  }
+  union SearchResult = Product | User
 
   extend type Query {
-    departments: [Department]
-    department(id: ID!): Department
-
-    departmentCategoriesByDepartment(id: ID!): [DepartmentCategory]
-    departmentCategories: [DepartmentCategory]
-    departmentCategory(id: ID!): DepartmentCategory
-
-    productCategoriesByDepartmentCategory(id: ID!): [ProductCategory]
-    productCategories: [ProductCategory]
-    productCategory(id: ID!): ProductCategory
-
-    productsByProductCategory(id: ID!): [Product]
-    products: [Product]
-    product(id: ID!): Product
-    productsByOwner(id: ID!): [Product]
-  }
-
-  extend type Mutation {
-    stockControl(id: ID, quantity: Int, operation: String): Int
-    addProduct(
-      name: String!
-      description: String!
-      price: Int!
-      images: [String]
-      hasOffer: Boolean
-      offerPrice: Int
-      stock: Int!
-      size: String
-      productCategoryId: Int!
-      userId: String!
-    ): Product
-    updateProduct(
-      id: ID!
-      name: String
-      description: String
-      price: Int
-      images: [String]
-      hasOffer: Boolean
-      offerPrice: Int
-      stock: Int
-      size: String
-      productCategoryId: Int
-      userId: String
-    ): Product
-    deleteProduct(id: ID!): Product
+    search(query: String!): [SearchResult!]!
   }
 `;
+
+// extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@shareable", "@external"])
+
+// type Query {
+//   search(term: String!, limit: Int = 10, offset: Int = 0): [SearchResult]
+//   searchProducts(term: String!, limit: Int = 10, offset: Int = 0): [Product]
+//   searchCategories(term: String!, limit: Int = 10, offset: Int = 0): [Category]
+//   popularSearches: [String]
+// }
+
+// union SearchResult = Product | Category
+
+// # Reference to Product from Products subgraph
+// type Product @key(fields: "id") {
+//   id: ID!
+//   name: String! @external
+//   description: String @external
+//   price: Float! @external
+//   imageUrl: String @external
+//   category: Category @external
+//   searchScore: Float
+//   # This is a field that only exists in the search service
+//   searchRelevance: Float
+// }
+
+// # Reference to Category from Products subgraph
+// type Category @key(fields: "id") {
+//   id: ID!
+//   name: String! @external
+//   description: String @external
+//   searchScore: Float
+// }

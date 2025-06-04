@@ -1,10 +1,13 @@
-import { ProductResolver } from "./products";
+import { SearchResolver } from "./search";
 
 export const resolvers = {
   Query: {
-    ...ProductResolver.Query,
+    ...SearchResolver.Query,
   },
-  Mutation: {
-    ...ProductResolver.Mutation,
+  User: {
+    __resolveReference: SearchResolver.User.__resolveReference,
+  },
+  Product: {
+    __resolveReference: SearchResolver.Product.__resolveReference,
   },
 };

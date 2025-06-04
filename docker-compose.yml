@@ -1,12 +1,12 @@
 services:
-  products:
+  search:
     build:
       context: .
       dockerfile: Dockerfile
     restart: always
-    container_name: products_subgraph
+    container_name: search_subgraph
     ports:
-      - "4002:4002"
+      - "4003:4003"
     networks:
       - ekoru-network
 
