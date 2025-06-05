@@ -35,6 +35,27 @@ enum ShippingStage {
   CANCELED
 }
 
+enum Badge {
+  POPULAR
+  DISCOUNTED
+  WOMAN_OWNED
+  ECO_FRIENDLY
+  BEST_SELLER
+  TOP_RATED
+  COMMUNITY_FAVORITE
+  LIMITED_TIME_OFFER
+  FLASH_SALE
+  BEST_VALUE
+  HANDMADE
+  SUSTAINABLE
+  SUPPORTS_CAUSE
+  FAMILY_BUSINESS
+  CHARITY_SUPPORT
+  LIMITED_STOCK
+  SEASONAL
+  FREE_SHIPPING
+}
+
 model Session {
   id        String   @id @default(uuid())
   userId    String
@@ -138,6 +159,10 @@ model UserCategory {
 
 model Product {
   id                Int              @id @default(autoincrement())
+  sku               String?          @unique
+  barcode           String?          @unique
+  color             String?
+  brand             String
   name              String
   description       String
   price             Int
@@ -146,7 +171,17 @@ model Product {
   offerPrice        Int              @default(0)
   stock             Int
   size              String
+  weight            Float
+  isExchangeable    Boolean          @default(false)
+  isActive          Boolean          @default(true)
+  ratings           Float            @default(0)
+  ratingCount       Int              @default(0)
+  reviewsNumber     Int              @default(0)
   userId            String
+  keywords          String[]         @default([])
+  badges            Badge[]          @default([])
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
   user              User             @relation(fields: [userId], references: [id])
   productCategoryId Int
   productCategory   ProductCategory  @relation(fields: [productCategoryId], references: [id])

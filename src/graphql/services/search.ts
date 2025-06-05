@@ -1,20 +1,26 @@
-import prisma from "../../client/prisma";
-import { ErrorService } from "../../errors/errors";
-import { Product } from "../../types/product";
+import { type Product, type ProductCategory, type Department, type DepartmentCategory } from "../../types/product";
 import { ProductService } from "./product";
-import { UserService } from "./user";
 
 export const SearchService = {
-  searchResult: async (query: string) => {
-    const users = await UserService.searchUsers(query);
-    const products = await ProductService.searchProducts(query);
+  searchResult: async ({ query }: { query: string }) => {
+    const [products, productCategories, departments, departmentCategories] = await Promise.all([
+      ProductService.searchProducts(query),
+      ProductService.searchProductCategories(query),
+      ProductService.searchDepartments(query),
+      ProductService.searchDepartmentCategories(query),
+    ]);
 
-    // Add typename to help with __resolveType
-    const typedUsers = users.map((u: any) => ({ __typename: "User", id: u.id }));
-    const typedProducts = products.map((p) => ({ __typename: "Product", id: p.id }));
-    console.log("typedUsers: ", typedUsers);
-    console.log("typedProducts: ", typedProducts);
+    const typedProducts = products.map((p: Product) => ({ __typename: "Product", id: p.id }));
+    const typedProductCategories = productCategories.map((p: Partial<ProductCategory>) => ({
+      __typename: "ProductCategory",
+      id: p.id,
+    }));
+    const typedDepartments = departments.map((p: Partial<Department>) => ({ __typename: "Department", id: p.id }));
+    const typedDepartmentCategories = departmentCategories.map((p: Partial<DepartmentCategory>) => ({
+      __typename: "DepartmentCategory",
+      id: p.id,
+    }));
 
-    return [...typedUsers, ...typedProducts];
+    return [...typedProducts, ...typedProductCategories, ...typedDepartments, ...typedDepartmentCategories];
   },
 };
