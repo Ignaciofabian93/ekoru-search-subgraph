@@ -1,4 +1,3 @@
-import { type Product, type ProductCategory, type Department, type DepartmentCategory } from "../../types/product";
 import { ProductService } from "./product";
 
 export const SearchService = {
@@ -10,13 +9,13 @@ export const SearchService = {
       ProductService.searchDepartmentCategories(query),
     ]);
 
-    const typedProducts = products.map((p: Product) => ({ __typename: "Product", id: p.id }));
-    const typedProductCategories = productCategories.map((p: Partial<ProductCategory>) => ({
+    const typedProducts = products.map((p) => ({ __typename: "Product", id: p.id }));
+    const typedProductCategories = productCategories.map((p) => ({
       __typename: "ProductCategory",
       id: p.id,
     }));
-    const typedDepartments = departments.map((p: Partial<Department>) => ({ __typename: "Department", id: p.id }));
-    const typedDepartmentCategories = departmentCategories.map((p: Partial<DepartmentCategory>) => ({
+    const typedDepartments = departments.map((p) => ({ __typename: "Department", id: p.id }));
+    const typedDepartmentCategories = departmentCategories.map((p) => ({
       __typename: "DepartmentCategory",
       id: p.id,
     }));
