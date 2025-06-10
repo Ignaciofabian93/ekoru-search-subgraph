@@ -29,17 +29,13 @@ export type Product = {
   hasOffer: boolean;
   offerPrice: number;
   stock: number;
-  size?: "SMALL" | "MEDIUM" | "LARGE";
-  weight?: number;
-  weightUnit?: "KG" | "LB" | "OZ" | "G";
   isExchangeable: boolean;
   isActive: boolean;
-  ratings: number;
+  ratings?: number;
   ratingCount: number;
   reviewsNumber: number;
   userId: string;
-  keywords: string[];
-  badges:
+  badges: (
     | "POPULAR"
     | "DISCOUNTED"
     | "WOMAN_OWNED"
@@ -57,13 +53,14 @@ export type Product = {
     | "CHARITY_SUPPORT"
     | "LIMITED_STOCK"
     | "SEASONAL"
-    | "FREE_SHIPPING";
+    | "FREE_SHIPPING"
+  )[];
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt?: Date;
   productCategoryId: number;
-  likes: Like[];
-  comments: Comment[];
-  itemsOrdered: ItemOrdered[];
+  likes?: Like[];
+  comments?: Comment[];
+  itemsOrdered?: ItemOrdered[];
 };
 
 export type Like = {
