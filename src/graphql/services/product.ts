@@ -6,6 +6,71 @@ export const ProductService = {
   searchProducts: async (query: string) => {
     const parsedQuery = query.toLowerCase().trim();
     const products: Product[] = await prisma.product.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            surnames: true,
+            profileImage: true,
+            isCompany: true,
+            businessName: true,
+            phone: true,
+            address: true,
+            county: {
+              select: {
+                id: true,
+                county: true,
+              },
+            },
+            city: {
+              select: {
+                id: true,
+                city: true,
+              },
+            },
+            region: {
+              select: {
+                id: true,
+                region: true,
+              },
+            },
+          },
+        },
+        productCategory: {
+          select: {
+            id: true,
+            productCategory: true,
+            departmentCategoryId: true,
+            keywords: true,
+            materialImpactEstimateId: true,
+            size: true,
+            minWeight: true,
+            maxWeight: true,
+            weightUnit: true,
+          },
+        },
+        comments: {
+          select: {
+            id: true,
+            comment: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                businessName: true,
+              },
+            },
+          },
+        },
+        likes: {
+          select: {
+            id: true,
+            userId: true,
+          },
+        },
+      },
       where: {
         OR: [
           {
