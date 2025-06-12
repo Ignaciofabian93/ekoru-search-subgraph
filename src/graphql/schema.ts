@@ -19,10 +19,6 @@ export const typeDefs = gql`
     id: ID! @external
   }
 
-  extend type User @key(fields: "id") {
-    id: ID! @external
-  }
-
   union SearchResult = Product | ProductCategory | Department | DepartmentCategory
 
   extend type Query {
