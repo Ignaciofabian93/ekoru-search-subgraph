@@ -41,7 +41,7 @@ export const ProductService = {
         productCategory: {
           select: {
             id: true,
-            productCategory: true,
+            productCategoryName: true,
             departmentCategoryId: true,
             keywords: true,
             materialImpactEstimateId: true,
@@ -49,6 +49,19 @@ export const ProductService = {
             minWeight: true,
             maxWeight: true,
             weightUnit: true,
+            departmentCategory: {
+              select: {
+                id: true,
+                departmentCategoryName: true,
+                departmentId: true,
+                department: {
+                  select: {
+                    id: true,
+                    departmentName: true,
+                  },
+                },
+              },
+            },
           },
         },
         comments: {
@@ -89,19 +102,39 @@ export const ProductService = {
       },
     });
 
-    if (!products || products.length === 0) {
-      throw new ErrorService.NotFoundError("No se han encontrado productos que coincidan con la búsqueda.");
-    }
-
-    return products;
+    return products ?? [];
   },
   searchProductCategories: async (query: string) => {
     const parsedQuery = query.toLowerCase().trim();
     const productCategories: ProductCategory[] = await prisma.productCategory.findMany({
+      select: {
+        id: true,
+        productCategoryName: true,
+        departmentCategoryId: true,
+        keywords: true,
+        materialImpactEstimateId: true,
+        size: true,
+        minWeight: true,
+        maxWeight: true,
+        weightUnit: true,
+        departmentCategory: {
+          select: {
+            id: true,
+            departmentCategoryName: true,
+            departmentId: true,
+            department: {
+              select: {
+                id: true,
+                departmentName: true,
+              },
+            },
+          },
+        },
+      },
       where: {
         OR: [
           {
-            productCategory: {
+            productCategoryName: {
               contains: parsedQuery,
               mode: "insensitive",
             },
@@ -115,49 +148,44 @@ export const ProductService = {
       },
     });
 
-    if (!productCategories || productCategories.length === 0) {
-      throw new ErrorService.NotFoundError(
-        "No se han encontrado categorías de productos que coincidan con la búsqueda.",
-      );
-    }
-
-    return productCategories;
+    return productCategories ?? [];
   },
   searchDepartments: async (query: string) => {
     const parsedQuery = query.toLowerCase().trim();
     const departments: Department[] = await prisma.department.findMany({
       where: {
-        department: {
+        departmentName: {
           contains: parsedQuery,
           mode: "insensitive",
         },
       },
     });
 
-    if (!departments || departments.length === 0) {
-      throw new ErrorService.NotFoundError("No se han encontrado departamentos que coincidan con la búsqueda.");
-    }
-
-    return departments;
+    return departments ?? [];
   },
   searchDepartmentCategories: async (query: string) => {
     const parsedQuery = query.toLowerCase().trim();
     const departmentCategories: DepartmentCategory[] = await prisma.departmentCategory.findMany({
+      select: {
+        id: true,
+        departmentCategoryName: true,
+        departmentId: true,
+        department: {
+          select: {
+            id: true,
+            departmentName: true,
+          },
+        },
+      },
       where: {
-        departmentCategory: {
+        departmentCategoryName: {
           contains: parsedQuery,
           mode: "insensitive",
         },
       },
     });
 
-    if (!departmentCategories || departmentCategories.length === 0) {
-      throw new ErrorService.NotFoundError(
-        "No se han encontrado categorías de departamentos que coincidan con la búsqueda.",
-      );
-    }
-
-    return departmentCategories;
+    return departmentCategories ?? [];
   },
   getProductById: async ({ id }: { id: number }) => {
     const product: Product | null = await prisma.product.findUnique({
