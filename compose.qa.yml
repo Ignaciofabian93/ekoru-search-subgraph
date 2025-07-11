@@ -1,0 +1,19 @@
+services:
+  search:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    container_name: search_subgraph_qa
+    ports:
+      - "4103:4003"
+    environment:
+      - NODE_ENV=qa
+    env_file:
+      - .env.qa
+    networks:
+      - ekoru-network
+
+networks:
+  ekoru-network:
+    external: true

@@ -1,0 +1,19 @@
+services:
+  search:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    container_name: search_subgraph_prod
+    ports:
+      - "4003:4003"
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - .env.prod
+    networks:
+      - ekoru-network
+
+networks:
+  ekoru-network:
+    external: true
