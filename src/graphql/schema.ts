@@ -7,19 +7,11 @@ export const typeDefs = gql`
     id: ID! @external
   }
 
-  extend type DepartmentCategory @key(fields: "id") {
-    id: ID! @external
-  }
-
-  extend type Department @key(fields: "id") {
-    id: ID! @external
-  }
-
   extend type Product @key(fields: "id") {
     id: ID! @external
   }
 
-  union SearchResult = Product | ProductCategory | Department | DepartmentCategory
+  union SearchResult = Product | ProductCategory
 
   extend type Query {
     search(query: String!): [SearchResult!]!

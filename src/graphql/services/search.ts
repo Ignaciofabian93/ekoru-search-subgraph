@@ -1,14 +1,12 @@
-import { type Product, type ProductCategory, type Department, type DepartmentCategory } from "../../types/product";
+import { type Product, type ProductCategory } from "../../types/product";
 import { ProductService } from "./product";
 
 export const SearchService = {
   searchResult: async ({ query }: { query: string }) => {
     try {
-      const [products, productCategories, departments, departmentCategories] = await Promise.all([
+      const [products, productCategories] = await Promise.all([
         ProductService.searchProducts(query),
         ProductService.searchProductCategories(query),
-        ProductService.searchDepartments(query),
-        ProductService.searchDepartmentCategories(query),
       ]);
 
       const typedProducts = products.map((p: Pick<Product, "id">) => ({ __typename: "Product", id: p.id }));
@@ -16,13 +14,8 @@ export const SearchService = {
         __typename: "ProductCategory",
         id: p.id,
       }));
-      const typedDepartments = departments.map((p: Pick<Department, "id">) => ({ __typename: "Department", id: p.id }));
-      const typedDepartmentCategories = departmentCategories.map((p: Pick<DepartmentCategory, "id">) => ({
-        __typename: "DepartmentCategory",
-        id: p.id,
-      }));
 
-      return [...typedProducts, ...typedProductCategories, ...typedDepartments, ...typedDepartmentCategories];
+      return [...typedProducts, ...typedProductCategories];
     } catch (error) {
       console.error("Error al obtener resultados de búsqueda:", error);
       throw new Error("Error al obtener resultados de búsqueda.");

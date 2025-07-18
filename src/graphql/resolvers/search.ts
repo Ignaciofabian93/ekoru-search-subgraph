@@ -11,10 +11,4 @@ export const SearchResolver = {
   ProductCategory: {
     __resolveReference: (reference: { id: number }) => ProductService.getProductCategoryById(reference),
   },
-  Department: {
-    __resolveReference: (reference: { id: number }) => ProductService.getDepartmentById(reference),
-  },
-  DepartmentCategory: {
-    __resolveReference: (reference: { id: number }) => ProductService.getDepartmentCategoryById(reference),
-  },
 };
